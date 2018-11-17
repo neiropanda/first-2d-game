@@ -7,21 +7,34 @@ let fg = new Image();
 let pipeUp = new Image();
 let pipeBottom = new Image();
 
-bird.src = `img/bird_bird.png`;
-bg.src = `img/bird_bg.png`;
-fg.src = `img/bird_fg.png`;
-pipeUp.src = `img/bird_pipeUp.png`;
-pipeBottom.src = `img/bird_pipeBottom.png`;
+let clientY = 0;
 
-let gap = 110;
+bird.src = `img/cherry.png`;
+bg.src = `img/cherry_bg.png`;
+//fg.src = `img/cherry_fg.png`;
+pipeUp.src = `img/bird_pipeUp.png`;
+pipeUp.src = `img/dima.png`;
+pipeBottom.src = `img/tolik.png`;
+
+let gap = 150;
 
 //при нажатии на кнопку 
 
 document.addEventListener(`keydown`, moveUp);
 
 function moveUp() {
-	yPos -=15;
+	yPos -=25;
 }
+
+/*cvs.addEventListener(`touchstart`, function (e) {
+	clientY = e.touches[0].clientY;
+}, false);
+
+cvs.addEventListener(`touchend`, function (e) {
+	let deltaY;
+	deltaY = e.changedTouches[0].clientY - clientY;
+	if (deltaY < - 100) {}
+});*/
 
 let pipe = [];
 
@@ -34,7 +47,7 @@ pipe[0] = {
 
 let xPos = 10;
 let yPos = 150;
-let grav = 1;
+let grav = 1.5;
 
 function draw() {
 	ctx.drawImage(bg, 0, 0);
@@ -44,10 +57,22 @@ function draw() {
 		ctx.drawImage(pipeBottom, pipe[i].x, pipe[i].y + pipeUp.height + gap);
 
 		pipe[i].x--;
-	}
 
-	ctx.drawImage(pipeUp, 100, 0);
-	ctx.drawImage(pipeBottom, 100, 0 + pipeUp.height + gap);
+		if (pipe[i].x == 110) {
+			pipe.push({
+				x : cvs.width,
+				y : Math.floor(Math.random() * pipeUp.height) - pipeUp.height
+			});
+		}
+
+
+		if(xPos + bird.width >= pipe[i].x
+			&& xPos <= pipe[i].x + pipeUp.width
+			&& (yPos <= pipe[i].y + pipeUp.height
+				|| yPos + bird.height >= pipe[i].y + pipeUp.height + gap)) {
+				location.reload();
+		}
+	}
 
 
 	ctx.drawImage(fg, 0, cvs.height - fg.height);
