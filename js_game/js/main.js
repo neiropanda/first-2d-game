@@ -18,23 +18,28 @@ pipeBottom.src = `img/tolik.png`;
 
 let gap = 150;
 
+//audio
+
+let fly = new Audio();
+let score_audio = new Audio();
+
+fly.src = `audio/fly.mp3`;
+score_audio.src = `audio/score.mp3`;
+
 //при нажатии на кнопку 
 
 document.addEventListener(`keydown`, moveUp);
 
 function moveUp() {
 	yPos -=25;
+	fly.play();
 }
 
-/*cvs.addEventListener(`touchstart`, function (e) {
-	clientY = e.touches[0].clientY;
+cvs.addEventListener('touchstart', function(event) {
+if (event.targetTouches.length == 1) {
+var clientY=event.targetTouches[0]; 
+}
 }, false);
-
-cvs.addEventListener(`touchend`, function (e) {
-	let deltaY;
-	deltaY = e.changedTouches[0].clientY - clientY;
-	if (deltaY < - 100) {}
-});*/
 
 let pipe = [];
 
@@ -42,6 +47,8 @@ pipe[0] = {
 	x : cvs.width,
 	y : 0
 }
+
+let score = 0;
 
 //позиция птички
 
@@ -71,9 +78,19 @@ function draw() {
 			&& (yPos <= pipe[i].y + pipeUp.height
 				|| yPos + bird.height >= pipe[i].y + pipeUp.height + gap)) {
 				location.reload();
-		}
+
+			}
+
+			if(pipe[i].x == 5) {
+				score++;
+				score_audio.play();	
+			}
+		
 	}
 
+	ctx.fillStyle = `#f1c40f`;
+	ctx.font = `24px Verdana`;
+	ctx.fillText(`SCORE: ` + score, 10, cvs.height - 20);
 
 	ctx.drawImage(fg, 0, cvs.height - fg.height);
 	ctx.drawImage(bird, xPos, yPos);
